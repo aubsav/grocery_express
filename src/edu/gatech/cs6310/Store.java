@@ -5,7 +5,7 @@ import java.util.TreeMap;
 public class Store 
 {
 	public String storeName;
-	public String revenue;
+	public int revenue;
 	
 	public int totalPurchases;
 	public int totalTransfers;
@@ -17,7 +17,7 @@ public class Store
 	public Store(String storeName, String revenue) 
 	{
 		this.storeName = storeName;
-		this.revenue = revenue;
+		this.revenue = Integer.parseInt(revenue);
 		
 		totalPurchases = 0;
 		totalTransfers = 0;
@@ -89,9 +89,9 @@ public class Store
     	for (String i : drones.keySet())
     	{
     		System.out.print("droneID:" + i + 
-    				",total_cap: " + drones.get(i).weightCapacity + 
+    				",total_cap:" + drones.get(i).weightCapacity + 
     				",num_orders:" + drones.get(i).totalOrders + 
-    				",remaining_cap:" + drones.get(i).remainingWeightCapacity + 
+    				",remaining_cap:" + (drones.get(i).weightCapacity - drones.get(i).totalOrderWeight) + 
     				",trips_left:" + drones.get(i).tripsUntilMaintenance);
     		if(drones.get(i).currentlyFlying)
     		{
@@ -190,7 +190,8 @@ public class Store
 		{
 			items.get(itemName).itemPrice = unitPrice;
 			orders.get(orderID).addLine(itemName,quantity,unitPrice,items.get(itemName).itemWeight);			
-			
+			String currentDroneID = orderIDCurrentDrone(orderID);
+			drones.get(currentDroneID).totalOrderWeight += (items.get(itemName).itemWeight*quantity);
 		}
 		else
 		{
@@ -202,7 +203,7 @@ public class Store
     {
     	boolean result = false;
     	String droneID = orderIDCurrentDrone(orderID);
-    	if(drones.get(droneID).remainingWeightCapacity > (quantity*weight))
+    	if((drones.get(droneID).weightCapacity - drones.get(droneID).totalOrderWeight) > (quantity*weight))
     	{
     			result = true;
     	}
@@ -212,7 +213,7 @@ public class Store
     public boolean availableSpaceOnNewDrone(String orderID, int totalWeight, String droneID)
     {
     	boolean result = false;
-    	if(drones.get(droneID).remainingWeightCapacity > (totalWeight))
+    	if((drones.get(droneID).weightCapacity - drones.get(droneID).totalOrderWeight) > (totalWeight))
     	{
     			result = true;
     	}
@@ -269,7 +270,7 @@ public class Store
     
     public void addToRevenue(String orderID)
     {
-    	revenue = revenue + getTotalPrice(orderID);
+    	revenue += getTotalPrice(orderID);
     }
     
     // Returns the index of drone pilot assigned to the current drone ID

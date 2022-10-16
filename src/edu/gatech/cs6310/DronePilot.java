@@ -14,7 +14,7 @@ public class DronePilot extends User
 	public String accountID;
 	public String licenseID;
 	public String taxID;
-	public String experience;
+	public int experience;
 	
 	public boolean currentlyFlyingDrone;
 	public String droneID;
@@ -29,7 +29,9 @@ public class DronePilot extends User
 		this.phoneNumber = phoneNumber;
 		this.taxID = taxID;
 		this.licenseID = licenseID;
-		this.experience = experience;
+		this.experience = Integer.parseInt(experience);
+		
+		droneID = "";
 	}
 	
 	public void flyDrone(String droneID)
@@ -41,7 +43,7 @@ public class DronePilot extends User
 	public void removeDrone()
 	{
 		currentlyFlyingDrone = false;
-		//droneID = "";
+		droneID = "";
 	}
 	
 	public void deliverOrder()

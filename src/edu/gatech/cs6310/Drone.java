@@ -19,8 +19,6 @@ public class Drone
 	public String currentPilotLastName;
 	public String currentPilotAccountID;
 	
-	public int remainingWeightCapacity;
-	
 	TreeMap<String,Order> orders = new TreeMap<String,Order>();
   
 	public Drone(String droneID, String weightCapacity, String tripsUntilMaintenance, String assignedStoreName)
@@ -29,8 +27,6 @@ public class Drone
 		this.weightCapacity = Integer.parseInt(weightCapacity);
 		this.tripsUntilMaintenance = Integer.parseInt(tripsUntilMaintenance);
 		this.assignedStoreName = assignedStoreName;
-		
-		remainingWeightCapacity = Integer.parseInt(weightCapacity);
 	}
 	
 	public void assignPilot(String pilotFirstName, String pilotLastName, String accountID)
@@ -49,6 +45,13 @@ public class Drone
 	}
 	
 	public void addOrder(String orderID, Order order)
+	{
+		orders.put(orderID,order);
+		totalOrders = orders.size();
+		totalOrderWeight += orders.get(orderID).calculateTotalWeight();
+	}
+	
+	public void addItem(String orderID, Order order)
 	{
 		orders.put(orderID,order);
 		totalOrders = orders.size();

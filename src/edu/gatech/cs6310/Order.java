@@ -55,7 +55,7 @@ public class Order
     	int result = 0;
     	for (String i : lines.keySet())
     	{
-    		result = result + (lines.get(i).quantity * lines.get(i).itemWeight);
+    		result += (lines.get(i).quantity * lines.get(i).itemWeight);
     	}
     	return result;
     }

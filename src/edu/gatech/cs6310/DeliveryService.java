@@ -45,6 +45,7 @@ public class DeliveryService {
                 
                 else if (tokens[0].equals("display_stores")) 
                 {
+                	displayStoreNames();
                     System.out.println("OK:display_completed");
 
                 } 
@@ -81,6 +82,7 @@ public class DeliveryService {
                 	{
                 		stores.get(storeName).displayItems();
                 	}
+                	System.out.println("OK:display_completed");
 
                 } 
                 else if (tokens[0].equals("make_pilot")) 
@@ -148,6 +150,7 @@ public class DeliveryService {
                 	{
                 		stores.get(storeName).displayDrones();
                 	}
+                	System.out.println("OK:display_completed");
                 	
                 } 
                 else if (tokens[0].equals("fly_drone")) 
@@ -196,6 +199,7 @@ public class DeliveryService {
                 	if(!customers.containsKey(userName))
                 	{
                 		customers.put(userName,new Customer(userName,firstName,lastName,phoneNumber,rating,credit));
+                		System.out.println("OK:change_completed");
                 	}
                 	else
                 	{
@@ -204,7 +208,8 @@ public class DeliveryService {
                 } 
                 else if (tokens[0].equals("display_customers")) 
                 {
-                	sortCustomerUserNames();
+                	displayCustomerUserNames();
+                	System.out.println("OK:display_completed");
 
                 } 
                 else if (tokens[0].equals("start_order")) 
@@ -222,7 +227,6 @@ public class DeliveryService {
                     		{
                     			if(stores.get(storeName).drones.containsKey(droneID))
                         		{
-                        			//orders.put(orderID,new Order(storeName,orderID,droneID,userName));
                         			stores.get(storeName).assignOrderToDrone(orderID,droneID,userName);
                         			System.out.println("OK:change_completed");
                         		}
@@ -253,6 +257,7 @@ public class DeliveryService {
                 	if(stores.containsKey(storeName))
                 	{
                 		stores.get(storeName).displayOrders();
+                		System.out.println("OK:display_completed");
                 	}
                 	else
                 	{
@@ -371,14 +376,17 @@ public class DeliveryService {
                 		{
                 			if(stores.get(storeName).drones.containsKey(newDroneID))
                 			{
-                				if(stores.get(storeName).transferOrder(orderID,newDroneID))
+                				if(stores.get(storeName).orders.get(orderID).assignedDroneID.equals(newDroneID))
+                				{
+                					System.out.println("OK:new_drone_is_current_drone_no_change");
+                				}
+                				else if(stores.get(storeName).transferOrder(orderID,newDroneID))
                 				{
                 					System.out.println("OK:change_completed");
                 				}
                 				else
                 				{
                 					System.out.println("Error:new_drone_does_not_have_enough_capacity");
-                					System.out.println("OK:new_drone_is_current_drone_no_change");
                 				}
                 			}
                 			else
@@ -400,7 +408,7 @@ public class DeliveryService {
                 else if (tokens[0].equals("display_efficiency")) 
                 {
                 	displayEfficiency();
-                    System.out.println("OK:display_completed ");
+                    System.out.println("OK:display_completed");
 
                 } 
                 else if (tokens[0].equals("stop")) 
@@ -425,10 +433,8 @@ public class DeliveryService {
         commandLineInput.close();
     }
     
-    public void sortStoreNames()
+    public void displayStoreNames()
     {
-    	//TreeMap<String,String> storeNames = new TreeMap<String,>();
-    	//TreeMap<String,String> index = new TreeMap<String,>();
     	for (String i : stores.keySet())
     	{
     		System.out.println("name:" + i + ",revenue:" + stores.get(i).revenue);
@@ -472,7 +478,7 @@ public class DeliveryService {
     	return accountID;
     }
     
-    public void sortCustomerUserNames()
+    public void displayCustomerUserNames()
     {
     	for (String i : customers.keySet())
     	{
@@ -489,8 +495,8 @@ public class DeliveryService {
     	{
     	System.out.println("name:"+stores.get(i).storeName +
     			",purchases:" + stores.get(i).totalPurchases +
-    			",overloads" + stores.get(i).getTotalOverload() +
-    			",transers" + stores.get(i).totalTransfers);
+    			",overloads:" + stores.get(i).getTotalOverload() +
+    			",transfers:" + stores.get(i).totalTransfers);
     	}
     	
     }
