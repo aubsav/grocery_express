@@ -12,6 +12,7 @@ public class Drone
 	
 	public int totalOrders;
 	public int totalOrderWeight;
+	public int overload;
 	
 	public boolean currentlyFlying;
 	public String currentPilotFirstName;
@@ -60,6 +61,7 @@ public class Drone
 		totalOrderWeight -= orders.get(orderID).calculateTotalWeight();
 		orders.remove(orderID);
 		totalOrders = orders.size();
+		overload = overload + totalOrders;
 	}
 	
 	public void cancelOrder(String orderID)

@@ -7,6 +7,9 @@ public class Store
 	public String storeName;
 	public String revenue;
 	
+	public int totalPurchases;
+	public int totalTransfers;
+	
 	TreeMap<String,Item> items = new TreeMap<String,Item>();
 	TreeMap<String,Drone> drones = new TreeMap<String,Drone>();
 	TreeMap<String,Order> orders = new TreeMap<String,Order>();
@@ -15,6 +18,9 @@ public class Store
 	{
 		this.storeName = storeName;
 		this.revenue = revenue;
+		
+		totalPurchases = 0;
+		totalTransfers = 0;
 	}
 	
     // Returns true if the item name already exists
@@ -225,6 +231,7 @@ public class Store
     
     public void orderPurchased(String orderID)
     {
+    	totalPurchases += 1;
     	addToRevenue(orderID);
     	drones.get(orderIDCurrentDrone(orderID)).deliverOrder(orderID);
     	orders.remove(orderID);
@@ -241,12 +248,23 @@ public class Store
     	boolean result = false;
     	if(availableSpaceOnNewDrone(orderID,orders.get(orderID).calculateTotalWeight(),droneID))
     	{
+    		totalTransfers += 1;
     		drones.get(orderIDCurrentDrone(orderID)).cancelOrder(orderID);
     		drones.get(droneID).addOrder(orderID,orders.get(orderID));
     		result = true;
     	}
     	
     	return result;
+    }
+    
+    public int getTotalOverload()
+    {
+    	int total = 0;
+    	for (String i : drones.keySet())
+    	{
+    		total += drones.get(i).overload;
+    	}
+    	return total;
     }
     
     public void addToRevenue(String orderID)

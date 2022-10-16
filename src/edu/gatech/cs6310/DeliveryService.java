@@ -22,7 +22,12 @@ public class DeliveryService {
                 tokens = wholeInputLine.split(DELIMITER);
                 System.out.println("> " + wholeInputLine);
 
-                if (tokens[0].equals("make_store")) 
+                if (wholeInputLine.substring(0,2).equals( "//"))
+                {
+                	// do nothing
+                }
+                
+                else if (tokens[0].equals("make_store")) 
                 {
                 	String storeName = tokens[1];
                 	String revenue = tokens[2];
@@ -40,7 +45,6 @@ public class DeliveryService {
                 
                 else if (tokens[0].equals("display_stores")) 
                 {
-                	//System.out.println()
                     System.out.println("OK:display_completed");
 
                 } 
@@ -393,17 +397,25 @@ public class DeliveryService {
                 	}
 
                 } 
-                else if (tokens[0].equals("display_efficiency")) {
-                    System.out.println("no parameters needed");
+                else if (tokens[0].equals("display_efficiency")) 
+                {
+                	displayEfficiency();
+                    System.out.println("OK:display_completed ");
 
-                } else if (tokens[0].equals("stop")) {
+                } 
+                else if (tokens[0].equals("stop")) 
+                {
                     System.out.println("stop acknowledged");
                     break;
 
-                } else {
+                } 
+                else 
+                {
                     System.out.println("command " + tokens[0] + " NOT acknowledged");
                 }
-            } catch (Exception e) {
+            } 
+            catch (Exception e) 
+            {
                 e.printStackTrace();
                 System.out.println();
             }
@@ -469,6 +481,18 @@ public class DeliveryService {
     				",rating:" + customers.get(i).customerRating + 
     				",credit:" + customers.get(i).credits);
     	}
+    }
+    
+    public void displayEfficiency()
+    {
+       	for (String i : stores.keySet())
+    	{
+    	System.out.println("name:"+stores.get(i).storeName +
+    			",purchases:" + stores.get(i).totalPurchases +
+    			",overloads" + stores.get(i).getTotalOverload() +
+    			",transers" + stores.get(i).totalTransfers);
+    	}
+    	
     }
 
 }
