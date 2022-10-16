@@ -27,6 +27,8 @@ public class Drone
 		this.weightCapacity = Integer.parseInt(weightCapacity);
 		this.tripsUntilMaintenance = Integer.parseInt(tripsUntilMaintenance);
 		this.assignedStoreName = assignedStoreName;
+		
+		currentPilotAccountID = "";
 	}
 	
 	public void assignPilot(String pilotFirstName, String pilotLastName, String accountID)
@@ -42,6 +44,7 @@ public class Drone
 		currentlyFlying = false;
 		currentPilotFirstName = "";
 		currentPilotLastName = "";
+		currentPilotAccountID = "";
 	}
 	
 	public void addOrder(String orderID, Order order)

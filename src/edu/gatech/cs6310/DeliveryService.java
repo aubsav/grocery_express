@@ -70,7 +70,7 @@ public class DeliveryService {
                 	}
                 	else
                 	{
-                		System.out.println("ERROR:store_identifier_does_not_exist ");
+                		System.out.println("ERROR:store_identifier_does_not_exist");
                 	}
 
                 } 
@@ -81,8 +81,12 @@ public class DeliveryService {
                 	if(stores.containsKey(storeName))
                 	{
                 		stores.get(storeName).displayItems();
+                		System.out.println("OK:display_completed");
                 	}
-                	System.out.println("OK:display_completed");
+                	else
+                	{
+                		System.out.println("ERROR:store_identifier_does_not_exist");
+                	}
 
                 } 
                 else if (tokens[0].equals("make_pilot")) 
@@ -134,12 +138,12 @@ public class DeliveryService {
                 		}
                 		else
                 		{
-                			System.out.println("ERROR:drone_identifier_already_exists ");
+                			System.out.println("ERROR:drone_identifier_already_exists");
                 		}
                 	}
                 	else
                 	{
-                		System.out.println("ERROR:store_identifier_does_not_exist ");
+                		System.out.println("ERROR:store_identifier_does_not_exist");
                 	}
                 } 
                
@@ -149,8 +153,12 @@ public class DeliveryService {
                 	if(stores.containsKey(storeName))
                 	{
                 		stores.get(storeName).displayDrones();
+                		System.out.println("OK:display_completed");
                 	}
-                	System.out.println("OK:display_completed");
+                	else
+                	{
+                		System.out.println("ERROR:store_identifier_does_not_exist");
+                	}
                 	
                 } 
                 else if (tokens[0].equals("fly_drone")) 
@@ -174,7 +182,7 @@ public class DeliveryService {
                     		}
                     		else
                     		{
-                    			System.out.println("ERROR:pilot_identifier_does_not_exist ");
+                    			System.out.println("ERROR:pilot_identifier_does_not_exist");
                     		}
                 		}
                 		else
@@ -184,7 +192,7 @@ public class DeliveryService {
                 	}
                 	else
                 	{
-                		System.out.println("ERROR:store_identifier_does_not_exist ");
+                		System.out.println("ERROR:store_identifier_does_not_exist");
                 	}
                 } 
                 else if (tokens[0].equals("make_customer")) 
@@ -219,37 +227,36 @@ public class DeliveryService {
                 	String droneID = tokens[3];
                 	String userName = tokens[4];
                 	
-                	if(customers.containsKey(userName))
+                	if(stores.containsKey(storeName))
                 	{
-                    	if(stores.containsKey(storeName))
+                    	if(!stores.get(storeName).orders.containsKey(orderID))
                     	{
-                    		if(!stores.get(storeName).orders.containsKey(orderID))
+                    		if(stores.get(storeName).drones.containsKey(droneID))
                     		{
-                    			if(stores.get(storeName).drones.containsKey(droneID))
+                    			if(customers.containsKey(userName))
                         		{
                         			stores.get(storeName).assignOrderToDrone(orderID,droneID,userName);
                         			System.out.println("OK:change_completed");
                         		}
                     			else
                     			{
-                    				System.out.println("ERROR:drone_identifier_does_not_exist ");
+                    				System.out.println("ERROR:customer_identifier_does_not_exist");
                     			}
                     		}
                     		else
                     		{
-                    			System.out.println("ERROR:order_identifier_already_exists");
+                    			System.out.println("ERROR:drone_identifier_does_not_exist");
                     		}
                     	}
                     	else
                     	{
-                    		System.out.println("ERROR:store_identifier_does_not_exist ");
+                    		System.out.println("ERROR:order_identifier_already_exists");
                     	}
                 	}
                 	else
                 	{
-                		System.out.println("ERROR:customer_identifier_does_not_exist");
+                		System.out.println("ERROR:store_identifier_does_not_exist");
                 	}
-                	
                 }
                 else if (tokens[0].equals("display_orders")) 
                 {
@@ -261,7 +268,7 @@ public class DeliveryService {
                 	}
                 	else
                 	{
-                		System.out.println("ERROR:store_identifier_does_not_exist ");
+                		System.out.println("ERROR:store_identifier_does_not_exist");
                 	}
                 } 
                 else if (tokens[0].equals("request_item")) 
@@ -278,30 +285,37 @@ public class DeliveryService {
                 		{
                 			if(stores.get(storeName).items.containsKey(itemName))
                     		{
-                				
-                				String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
-                				
-                				if(customers.get(currentUserName).credits > (quantity*unitPrice))
+                				if(!stores.get(storeName).orders.get(orderID).itemAlreadyExists(itemName))
                 				{
-                					
-                					if(stores.get(storeName).availableSpaceOnDrone(orderID,quantity,stores.get(storeName).getItemWeight(itemName)))
+                					String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
+                				
+                					if(customers.get(currentUserName).credits > (quantity*unitPrice))
                 					{
-                						stores.get(storeName).addItemToOrder(itemName,quantity,unitPrice,orderID);
-                						System.out.println("OK:change_completed");
+                					
+                						if(stores.get(storeName).availableSpaceOnDrone(orderID,quantity,stores.get(storeName).items.get(itemName).itemWeight))
+                						{
+                							stores.get(storeName).addItemToOrder(itemName,quantity,unitPrice,orderID);
+                							System.out.println("OK:change_completed");
+                						}
+                						else
+                						{
+                							System.out.println("ERROR:drone_cant_carry_new_item");
+                						}
                 					}
+                					
                 					else
                 					{
-                						System.out.println("ERROR:drone_cant_carry_new_item");
+                						System.out.println("ERROR:customer_cant_afford_new_item");
                 					}
                 				}
                 				else
                 				{
-                					System.out.println("ERROR:customer_cant_afford_new_item");
+                					System.out.println("ERROR:item_already_ordered");
                 				}
                     		}
                 			else
                 			{
-                				System.out.println("ERROR:item_identifier_does_not_exist ");
+                				System.out.println("ERROR:item_identifier_does_not_exist");
                 			}
                 		}
                 		else
@@ -323,13 +337,28 @@ public class DeliveryService {
                 	{
                 		if(stores.get(storeName).orders.containsKey(orderID))
                 		{
-                			String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
-                			customers.get(currentUserName).purchaseOrder(stores.get(storeName).getTotalPrice(orderID));
                 			String currentDroneID = stores.get(storeName).orderIDCurrentDrone(orderID);
-                			stores.get(storeName).orderPurchased(orderID);
-                	    	String currentPilot = stores.get(storeName).drones.get(currentDroneID).currentPilotAccountID;
-                			dronePilots.get(currentPilot).deliverOrder(); 
-                			System.out.println("OK:change_completed");
+                			String currentPilot = stores.get(storeName).drones.get(currentDroneID).currentPilotAccountID;
+                			String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
+                			
+                			if(currentPilot != "")
+                			{
+                				if(stores.get(storeName).drones.get(currentDroneID).tripsUntilMaintenance > 0)
+                				{
+                					customers.get(currentUserName).purchaseOrder(stores.get(storeName).getTotalPrice(orderID));
+                					stores.get(storeName).orderPurchased(orderID);
+                					dronePilots.get(currentPilot).deliverOrder();
+                					System.out.println("OK:change_completed");
+                				}
+                				else
+                				{
+                					System.out.println("ERROR:drone_needs_fuel");
+                				}
+                			}
+                			else
+                			{
+                				System.out.println("ERROR:drone_needs_pilot");
+                			}
                 		}
                 		else
                 		{
@@ -386,12 +415,12 @@ public class DeliveryService {
                 				}
                 				else
                 				{
-                					System.out.println("Error:new_drone_does_not_have_enough_capacity");
+                					System.out.println("ERROR:new_drone_does_not_have_enough_capacity");
                 				}
                 			}
                 			else
                 			{
-                				System.out.println("drone_identifier_does_not_exist");
+                				System.out.println("ERROR:drone_identifier_does_not_exist");
                 			}
                 		}
                 		else

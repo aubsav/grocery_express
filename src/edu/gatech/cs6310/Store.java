@@ -186,21 +186,15 @@ public class Store
 	
 	public void addItemToOrder(String itemName, int quantity, int unitPrice, String orderID)
 	{
-		if(!orders.get(orderID).itemAlreadyExists(itemName))
-		{
-			items.get(itemName).itemPrice = unitPrice;
-			orders.get(orderID).addLine(itemName,quantity,unitPrice,items.get(itemName).itemWeight);			
-			String currentDroneID = orderIDCurrentDrone(orderID);
-			drones.get(currentDroneID).totalOrderWeight += (items.get(itemName).itemWeight*quantity);
-		}
-		else
-		{
-			System.out.println("ERROR:item_already_ordered");
-		}
+		items.get(itemName).itemPrice = unitPrice;
+		orders.get(orderID).addLine(itemName,quantity,unitPrice,items.get(itemName).itemWeight);			
+		String currentDroneID = orderIDCurrentDrone(orderID);
+		drones.get(currentDroneID).totalOrderWeight += (items.get(itemName).itemWeight*quantity);
 	}
     
     public boolean availableSpaceOnDrone(String orderID, int quantity, int weight)
     {
+    	
     	boolean result = false;
     	String droneID = orderIDCurrentDrone(orderID);
     	if((drones.get(droneID).weightCapacity - drones.get(droneID).totalOrderWeight) > (quantity*weight))
@@ -278,11 +272,13 @@ public class Store
     {
     	String droneID = "";
     	for (String i : drones.keySet())
-    	{
-    		if(drones.get(i).orders.get(orderID).orderID.equals(orderID))
+    	{    		
+    		if(drones.get(i).orders.containsKey(orderID))
     		{
     			droneID = i;
+    			break;
     		}
+    		
     	}
     	return droneID;
     }
