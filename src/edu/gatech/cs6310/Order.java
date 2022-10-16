@@ -16,16 +16,14 @@ import java.util.TreeMap;
 
 public class Order
 {
-	public String assignedStore;
-	public String orderID;
-	public String assignedDroneID;
-	public String assignedCustomerUserName;
+	private String orderID;
+	private String assignedDroneID;
+	private String assignedCustomerUserName;
 	
 	TreeMap<String,Line> lines = new TreeMap<String,Line>();
 	
-	public Order(String assignedStore, String orderID, String assignedDroneID, String assignedCustomerUserName) 
+	public Order(String orderID, String assignedDroneID, String assignedCustomerUserName) 
 	{
-		this.assignedStore = assignedStore;
 		this.orderID = orderID;
 		this.assignedDroneID = assignedDroneID;
 		this.assignedCustomerUserName = assignedCustomerUserName;
@@ -41,7 +39,7 @@ public class Order
     	boolean result = false;
     	for (String i : lines.keySet())
     	{
-    		if(lines.get(i).itemName.equals(itemName))
+    		if(lines.get(i).getItemName().equals(itemName))
     		{
     			result = true;
     		}
@@ -54,7 +52,7 @@ public class Order
     	int result = 0;
     	for (String i : lines.keySet())
     	{
-    		result = result + (lines.get(i).quantity * lines.get(i).itemPrice);
+    		result = result + (lines.get(i).getQuantity() * lines.get(i).getItemPrice());
     	}
     	return result;
     }
@@ -64,7 +62,7 @@ public class Order
     	int result = 0;
     	for (String i : lines.keySet())
     	{
-    		result += (lines.get(i).quantity * lines.get(i).itemWeight);
+    		result += (lines.get(i).getQuantity() * lines.get(i).getItemWeight());
     	}
     	return result;
     }
@@ -74,9 +72,24 @@ public class Order
 		for (String i : lines.keySet())
 		{
 			System.out.println("item_name:" + i +
-					",total_quantity:" + lines.get(i).quantity +
-					",total_cost:" + (lines.get(i).itemPrice*lines.get(i).quantity) +
-					",total_weight:" + (lines.get(i).itemWeight*lines.get(i).quantity));
+					",total_quantity:" + lines.get(i).getQuantity() +
+					",total_cost:" + (lines.get(i).getItemPrice()*lines.get(i).getQuantity()) +
+					",total_weight:" + (lines.get(i).getItemWeight()*lines.get(i).getQuantity()));
 		}
+	}
+	
+	public String getOrderID()
+	{
+		return orderID;
+	}
+	
+	public String getAssignedDroneID()
+	{
+		return assignedDroneID;
+	}
+	
+	public String getAssignedCustomerUserName()
+	{
+		return assignedCustomerUserName;
 	}
 }

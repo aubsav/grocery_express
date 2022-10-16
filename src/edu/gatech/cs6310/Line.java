@@ -14,10 +14,10 @@ package edu.gatech.cs6310;
 
 public class Line 
 {
-	public String itemName;
-	public int quantity;
-	public int itemPrice;
-	public int itemWeight;
+	private String itemName;
+	private int quantity;
+	private int itemPrice;
+	private int itemWeight;
 	
 	public Line(String itemName, int quantity, int itemPrice, int itemWeight)
 	{
@@ -25,5 +25,25 @@ public class Line
 		this.quantity = quantity;
 		this.itemPrice = itemPrice;
 		this.itemWeight = itemWeight;
+	}
+	
+	public String getItemName()
+	{
+		return itemName;
+	}
+	
+	public int getQuantity()
+	{
+		return quantity;
+	}
+	
+	public int getItemPrice()
+	{
+		return itemPrice;
+	}
+	
+	public int getItemWeight()
+	{
+		return itemWeight;
 	}
 }

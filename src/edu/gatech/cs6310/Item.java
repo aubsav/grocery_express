@@ -14,14 +14,22 @@ package edu.gatech.cs6310;
 
 public class Item 
 {
-	public String itemName;
-	public int itemWeight;
-	public int itemPrice;
-	public String itemDescription;
+	private String itemName;
+	private int itemWeight;
 	
 	public Item(String itemName, String itemWeight) 
 	{
 		this.itemName = itemName;
 		this.itemWeight = Integer.parseInt(itemWeight);
+	}
+	
+	public String getItemName()
+	{
+		return itemName;
+	}
+	
+	public int getItemWeight()
+	{
+		return itemWeight;
 	}
 }

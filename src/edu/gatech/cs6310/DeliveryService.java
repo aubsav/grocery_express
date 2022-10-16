@@ -6,7 +6,7 @@
 //
 // Class: DeliveryService
 // 
-// Notes: Used the base code provided on Git Hub
+// Notes: Used the base code provided on CS6310 Git Hub
 //
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -185,7 +185,7 @@ public class DeliveryService {
                 		{
                 			if(dronePilots.containsKey(tokens[3]))
                 			{
-                    			if(stores.get(storeName).drones.get(droneID).currentlyFlying)
+                    			if(stores.get(storeName).drones.get(droneID).getCurrentlyFlying())
                     			{
                     				dronePilots.get(droneIDCurrentPilot(droneID)).removeDrone();
                     			}
@@ -299,12 +299,12 @@ public class DeliveryService {
                     		{
                 				if(!stores.get(storeName).orders.get(orderID).itemAlreadyExists(itemName))
                 				{
-                					String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
+                					String currentUserName = stores.get(storeName).orders.get(orderID).getAssignedCustomerUserName();
                 				
-                					if(customers.get(currentUserName).credits > (quantity*unitPrice))
+                					if(customers.get(currentUserName).getCredits() > (quantity*unitPrice))
                 					{
                 					
-                						if(stores.get(storeName).availableSpaceOnDrone(orderID,quantity,stores.get(storeName).items.get(itemName).itemWeight))
+                						if(stores.get(storeName).availableSpaceOnDrone(orderID,quantity,stores.get(storeName).items.get(itemName).getItemWeight()))
                 						{
                 							stores.get(storeName).addItemToOrder(itemName,quantity,unitPrice,orderID);
                 							System.out.println("OK:change_completed");
@@ -350,12 +350,12 @@ public class DeliveryService {
                 		if(stores.get(storeName).orders.containsKey(orderID))
                 		{
                 			String currentDroneID = stores.get(storeName).orderIDCurrentDrone(orderID);
-                			String currentPilot = stores.get(storeName).drones.get(currentDroneID).currentPilotAccountID;
-                			String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
+                			String currentPilot = stores.get(storeName).drones.get(currentDroneID).getCurrentPilotAccountID();
+                			String currentUserName = stores.get(storeName).orders.get(orderID).getAssignedCustomerUserName();
                 			
                 			if(currentPilot != "")
                 			{
-                				if(stores.get(storeName).drones.get(currentDroneID).tripsUntilMaintenance > 0)
+                				if(stores.get(storeName).drones.get(currentDroneID).getTripsUntilMaintenance() > 0)
                 				{
                 					customers.get(currentUserName).purchaseOrder(stores.get(storeName).orders.get(orderID).calculateTotalPrice());
                 					stores.get(storeName).orderPurchased(orderID);
@@ -417,7 +417,7 @@ public class DeliveryService {
                 		{
                 			if(stores.get(storeName).drones.containsKey(newDroneID))
                 			{
-                				if(stores.get(storeName).orders.get(orderID).assignedDroneID.equals(newDroneID))
+                				if(stores.get(storeName).orders.get(orderID).getAssignedDroneID().equals(newDroneID))
                 				{
                 					System.out.println("OK:new_drone_is_current_drone_no_change");
                 				}
@@ -482,7 +482,7 @@ public class DeliveryService {
     	boolean result = false;
     	for (String i : dronePilots.keySet())
     	{
-    		if(dronePilots.get(i).licenseID.equals(licenseID))
+    		if(dronePilots.get(i).getLicenseID().equals(licenseID))
     		{
     			result = true;
     		}
@@ -500,7 +500,7 @@ public class DeliveryService {
     	String accountID = "";
     	for (String i : dronePilots.keySet())
     	{
-    		if(dronePilots.get(i).droneID.equals(droneID))
+    		if(dronePilots.get(i).getDroneID().equals(droneID))
     		{
     			accountID = i;
     		}
@@ -518,7 +518,7 @@ public class DeliveryService {
     {
     	for (String i : stores.keySet())
     	{
-    		System.out.println("name:" + i + ",revenue:" + stores.get(i).revenue);
+    		System.out.println("name:" + i + ",revenue:" + stores.get(i).getRevenue());
     	}
     }
     
@@ -528,8 +528,8 @@ public class DeliveryService {
     	{
     		System.out.println("name:" + customers.get(i).firstName + "_" + customers.get(i).lastName + 
     				",phone:" + customers.get(i).phoneNumber + 
-    				",rating:" + customers.get(i).customerRating + 
-    				",credit:" + customers.get(i).credits);
+    				",rating:" + customers.get(i).getCustomerRating() + 
+    				",credit:" + customers.get(i).getCredits());
     	}
     }
     
@@ -537,10 +537,10 @@ public class DeliveryService {
     {
        	for (String i : stores.keySet())
     	{
-       		System.out.println("name:"+stores.get(i).storeName +
-    			",purchases:" + stores.get(i).totalPurchases +
+       		System.out.println("name:"+stores.get(i).getStoreName() +
+    			",purchases:" + stores.get(i).getTotalPurchases() +
     			",overloads:" + stores.get(i).getTotalOverload() +
-    			",transfers:" + stores.get(i).totalTransfers);
+    			",transfers:" + stores.get(i).getTotalTransfers());
     	}
     }
     
@@ -548,7 +548,11 @@ public class DeliveryService {
     {
     	for (String i : dronePilots.keySet())
     	{
-    		System.out.println("name:" + dronePilots.get(i).firstName + "_" + dronePilots.get(i).lastName + ",phone:" + dronePilots.get(i).phoneNumber + ",taxID:" + dronePilots.get(i).taxID + ",licenseID:" + dronePilots.get(i).licenseID+ ",experience:" + dronePilots.get(i).experience);
+    		System.out.println("name:" + dronePilots.get(i).firstName + "_" + dronePilots.get(i).lastName + 
+    				",phone:" + dronePilots.get(i).phoneNumber + 
+    				",taxID:" + dronePilots.get(i).getTaxID() + 
+    				",licenseID:" + dronePilots.get(i).getLicenseID() + 
+    				",experience:" + dronePilots.get(i).getExperience());
     	}
     }
 

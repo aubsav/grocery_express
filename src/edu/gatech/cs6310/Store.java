@@ -16,11 +16,11 @@ import java.util.TreeMap;
 
 public class Store 
 {
-	public String storeName;
-	public int revenue;
+	private String storeName;
+	private int revenue;
 	
-	public int totalPurchases;
-	public int totalTransfers;
+	private int totalPurchases;
+	private int totalTransfers;
 	
 	TreeMap<String,Item> items = new TreeMap<String,Item>();
 	TreeMap<String,Drone> drones = new TreeMap<String,Drone>();
@@ -51,7 +51,7 @@ public class Store
     	boolean result = false;
     	for (String i : items.keySet())
     	{
-    		if(items.get(i).itemName.equals(itemName))
+    		if(items.get(i).getItemName().equals(itemName))
     		{
     			result = true;
     		}
@@ -76,13 +76,13 @@ public class Store
     	Drone drone = drones.get(droneID);
     	Drone previousDrone = drones.get(pilotCurrentDroneID(pilot));
     	
-    	boolean pilotAlreadyFlyingDrone = pilot.currentlyFlyingDrone;
-    	boolean droneAlreadyFlying = drone.currentlyFlying;
+    	boolean pilotAlreadyFlyingDrone = pilot.getCurrentlyFlyingDrone();
+    	boolean droneAlreadyFlying = drone.getCurrentlyFlying();
     	
     	if(!pilotAlreadyFlyingDrone && !droneAlreadyFlying)
     	{
     		pilot.flyDrone(droneID);
-    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.accountID);
+    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.getAccountID());
     	}
     	else if(pilotAlreadyFlyingDrone && droneAlreadyFlying)
     	{
@@ -90,18 +90,18 @@ public class Store
     		previousDrone.removePilot();
     		
     		pilot.flyDrone(droneID);
-    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.accountID);
+    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.getAccountID());
     	}
     	else if(pilotAlreadyFlyingDrone)
     	{
     		previousDrone.removePilot();
     		pilot.flyDrone(droneID);
-    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.accountID);
+    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.getAccountID());
     	}
     	else if(droneAlreadyFlying)
     	{
     		drone.removePilot();
-    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.accountID);
+    		drone.assignPilot(pilot.firstName,pilot.lastName,pilot.getAccountID());
     	}
     }
     
@@ -118,7 +118,7 @@ public class Store
     
     public void assignOrderToDrone(String orderID, String assignedDroneID, String assignedCustomerUserNames)
     {
-    	orders.put(orderID,new Order(storeName,orderID,assignedDroneID,assignedCustomerUserNames));
+    	orders.put(orderID,new Order(orderID,assignedDroneID,assignedCustomerUserNames));
     	drones.get(assignedDroneID).addOrder(orderID,orders.get(orderID));
     }
    
@@ -137,10 +137,9 @@ public class Store
     
 	public void addItemToOrder(String itemName, int quantity, int unitPrice, String orderID)
 	{
-		items.get(itemName).itemPrice = unitPrice;
-		orders.get(orderID).addLine(itemName,quantity,unitPrice,items.get(itemName).itemWeight);			
+		orders.get(orderID).addLine(itemName,quantity,unitPrice,items.get(itemName).getItemWeight());			
 		String currentDroneID = orderIDCurrentDrone(orderID);
-		drones.get(currentDroneID).totalOrderWeight += (items.get(itemName).itemWeight*quantity);
+		drones.get(currentDroneID).setTotalOrderWeight(items.get(itemName).getItemWeight()*quantity);
 	}
    
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -159,7 +158,7 @@ public class Store
     	
     	boolean result = false;
     	String droneID = orderIDCurrentDrone(orderID);
-    	if((drones.get(droneID).weightCapacity - drones.get(droneID).totalOrderWeight) > (quantity*weight))
+    	if((drones.get(droneID).getAvailableWeight()) > (quantity*weight))
     	{
     			result = true;
     	}
@@ -180,7 +179,7 @@ public class Store
     public boolean availableSpaceOnNewDrone(int totalWeight, String droneID)
     {
     	boolean result = false;
-    	if((drones.get(droneID).weightCapacity - drones.get(droneID).totalOrderWeight) > (totalWeight))
+    	if(drones.get(droneID).getAvailableWeight() > (totalWeight))
     	{
     			result = true;
     	}
@@ -202,7 +201,7 @@ public class Store
     	int total = 0;
     	for (String i : drones.keySet())
     	{
-    		total += drones.get(i).overload;
+    		total += drones.get(i).getOverload();
     	}
     	return total;
     }
@@ -239,7 +238,7 @@ public class Store
     	String droneID = "";
     	for (String i : drones.keySet())
     	{
-    		if(drones.get(i).droneID.equals(pilot.droneID))
+    		if(drones.get(i).getDroneID().equals(pilot.getDroneID()))
     		{
     			droneID = i;
     		}
@@ -313,7 +312,7 @@ public class Store
 	
 	public void addOrder(String orderID, String assignedDroneID, String assignedCustomerUserName)
 	{
-		orders.put(orderID,new Order(storeName,orderID,assignedDroneID,assignedCustomerUserName));
+		orders.put(orderID,new Order(orderID,assignedDroneID,assignedCustomerUserName));
 	}
 	
 	public void addDrone(String droneID, String weightCapacity, String tripsUntilMaintenance)
@@ -331,7 +330,7 @@ public class Store
     {
     	for (String i : items.keySet())
     	{
-    		System.out.println(i + "," + items.get(i).itemWeight);
+    		System.out.println(i + "," + items.get(i).getItemWeight());
     	}
     }
     
@@ -339,7 +338,7 @@ public class Store
     {
 		for (String i : orders.keySet())
 	   	{
-	   		System.out.println("orderID:" + orders.get(i).orderID);
+	   		System.out.println("orderID:" + orders.get(i).getOrderID());
 	   		orders.get(i).displayLines();
 	    }
     }
@@ -349,15 +348,44 @@ public class Store
     	for (String i : drones.keySet())
     	{
     		System.out.print("droneID:" + i + 
-    				",total_cap:" + drones.get(i).weightCapacity + 
-    				",num_orders:" + drones.get(i).totalOrders + 
-    				",remaining_cap:" + (drones.get(i).weightCapacity - drones.get(i).totalOrderWeight) + 
-    				",trips_left:" + drones.get(i).tripsUntilMaintenance);
-    		if(drones.get(i).currentlyFlying)
+    				",total_cap:" + drones.get(i).getWeightCapacity() + 
+    				",num_orders:" + drones.get(i).getTotalOrders() + 
+    				",remaining_cap:" + drones.get(i).getAvailableWeight() + 
+    				",trips_left:" + drones.get(i).getTripsUntilMaintenance());
+    		
+    		if(drones.get(i).getCurrentlyFlying())
     		{
-    			System.out.print(",flown_by:" + drones.get(i).currentPilotFirstName + "_"+ drones.get(i).currentPilotLastName);
+    			System.out.print(",flown_by:" + drones.get(i).getCurrentPilotFirstName() + "_"+ drones.get(i).getCurrentPilotLastName());
     		}
     		System.out.println("");
     	}
     }
+    
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Getter Functions
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+	
+	public String getStoreName()
+	{
+		return storeName;
+	}
+	
+	public int getRevenue()
+	{
+		return revenue;
+	}
+	
+	public int getTotalPurchases()
+	{
+		return totalPurchases;
+	}
+	
+	public int getTotalTransfers()
+	{
+		return totalTransfers;
+	}
+	
+	
 }

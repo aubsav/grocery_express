@@ -14,13 +14,13 @@ package edu.gatech.cs6310;
 
 public class DronePilot extends User
 {
-	public String accountID;
-	public String licenseID;
-	public String taxID;
-	public int experience;
+	private String accountID;
+	private String licenseID;
+	private String taxID;
+	private int experience;
 	
-	public boolean currentlyFlyingDrone;
-	public String droneID;
+	private boolean currentlyFlyingDrone;
+	private String droneID;
 	
 	public DronePilot(String accountID, String firstName, String lastName, String phoneNumber, String taxID, String licenseID, String experience) 
 	{
@@ -51,6 +51,36 @@ public class DronePilot extends User
 	public void deliverOrder()
 	{
 		experience += 1;
+	}
+	
+	public String getAccountID()
+	{
+		return accountID;
+	}
+	
+	public String getDroneID()
+	{
+		return droneID;
+	}
+	
+	public String getLicenseID()
+	{
+		return licenseID;
+	}	
+	
+	public String getTaxID()
+	{
+		return taxID;
+	}
+	
+	public int getExperience()
+	{
+		return experience;
+	}
+	
+	public boolean getCurrentlyFlyingDrone()
+	{
+		return currentlyFlyingDrone;
 	}
 
 }

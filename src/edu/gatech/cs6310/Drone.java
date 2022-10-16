@@ -16,18 +16,18 @@ import java.util.TreeMap;
 
 public class Drone 
 {
-	public String droneID;
-	public int weightCapacity;
-	public int tripsUntilMaintenance;
+	private String droneID;
+	private int weightCapacity;
+	private int tripsUntilMaintenance;
 	
-	public int totalOrders;
-	public int totalOrderWeight;
-	public int overload;
+	private int totalOrders;
+	private int totalOrderWeight;
+	private int overload;
 	
-	public boolean currentlyFlying;
-	public String currentPilotFirstName;
-	public String currentPilotLastName;
-	public String currentPilotAccountID;
+	private boolean currentlyFlying;
+	private String currentPilotFirstName;
+	private String currentPilotLastName;
+	private String currentPilotAccountID;
 	
 	TreeMap<String,Order> orders = new TreeMap<String,Order>();
   
@@ -86,4 +86,58 @@ public class Drone
 		totalOrders = orders.size();
 	}
 	
+	public String getDroneID()
+	{
+		return droneID;
+	}
+	
+	public int getWeightCapacity()
+	{
+		return weightCapacity;
+	}
+	
+	public int getTripsUntilMaintenance()
+	{
+		return tripsUntilMaintenance;
+	}
+	
+	public int getOverload()
+	{
+		return overload;
+	}
+	
+	public int getTotalOrders()
+	{
+		return totalOrders;
+	}
+	
+	public String getCurrentPilotAccountID()
+	{
+		return currentPilotAccountID;
+	}
+	
+	public String getCurrentPilotFirstName()
+	{
+		return currentPilotFirstName;
+	}
+	
+	public String getCurrentPilotLastName()
+	{
+		return currentPilotLastName;
+	}
+	
+	public boolean getCurrentlyFlying()
+	{
+		return currentlyFlying;
+	}
+	
+	public int getAvailableWeight()
+	{
+		return (weightCapacity - totalOrderWeight);
+	}
+	
+	public void setTotalOrderWeight(int additionalWeight)
+	{
+		totalOrderWeight += additionalWeight;
+	}
 }
