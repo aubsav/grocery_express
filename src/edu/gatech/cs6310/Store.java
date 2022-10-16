@@ -203,7 +203,7 @@ public class Store
     	return result;
     }
     
-    public boolean availableSpaceOnDrone(String orderID, int totalWeight, String droneID)
+    public boolean availableSpaceOnNewDrone(String orderID, int totalWeight, String droneID)
     {
     	boolean result = false;
     	if(drones.get(droneID).remainingWeightCapacity > (totalWeight))
@@ -239,7 +239,7 @@ public class Store
     public boolean transferOrder(String orderID, String droneID)
     {
     	boolean result = false;
-    	if(availableSpaceOnDrone(orderID,orders.get(orderID).calculateTotalWeight(),droneID))
+    	if(availableSpaceOnNewDrone(orderID,orders.get(orderID).calculateTotalWeight(),droneID))
     	{
     		drones.get(orderIDCurrentDrone(orderID)).cancelOrder(orderID);
     		drones.get(droneID).addOrder(orderID,orders.get(orderID));
@@ -267,31 +267,4 @@ public class Store
     	}
     	return droneID;
     }
-/*
-	private int calculateIncomingRevenue()
-	{
-		
-	}
-	
-	public void assignOrderToDrone()
-	{
-		
-	}
-	
-	private boolean compareWeight()
-	{
-		
-	}
-	
-	private void buyDrone()
-	{
-		
-	}
-	
-	private void hireEmployee()
-	{
-		
-	}
-	
-	*/
 }
