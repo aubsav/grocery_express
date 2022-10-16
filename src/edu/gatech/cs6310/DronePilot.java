@@ -1,12 +1,15 @@
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 //
 // Project: grocery_express
 //
+// Author: Aubrey Savage
+//
 // Class: DronePilot
+// 
+// Notes: Pilots can only fly one drone at a time
 //
-// Written by: Aubrey Savage
-//
-//////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+
 package edu.gatech.cs6310;
 
 public class DronePilot extends User
@@ -19,8 +22,6 @@ public class DronePilot extends User
 	public boolean currentlyFlyingDrone;
 	public String droneID;
 	
-	private boolean validLicense;
-	
 	public DronePilot(String accountID, String firstName, String lastName, String phoneNumber, String taxID, String licenseID, String experience) 
 	{
 		this.accountID = accountID;
@@ -32,6 +33,7 @@ public class DronePilot extends User
 		this.experience = Integer.parseInt(experience);
 		
 		droneID = "";
+		currentlyFlyingDrone = false;
 	}
 	
 	public void flyDrone(String droneID)

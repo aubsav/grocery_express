@@ -1,6 +1,17 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Project: grocery_express
+//
+// Author: Aubrey Savage
+//
+// Class: Drone
+// 
+// Notes: 
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+
 package edu.gatech.cs6310;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Drone 
@@ -8,7 +19,6 @@ public class Drone
 	public String droneID;
 	public int weightCapacity;
 	public int tripsUntilMaintenance;
-	public String assignedStoreName;
 	
 	public int totalOrders;
 	public int totalOrderWeight;
@@ -21,12 +31,11 @@ public class Drone
 	
 	TreeMap<String,Order> orders = new TreeMap<String,Order>();
   
-	public Drone(String droneID, String weightCapacity, String tripsUntilMaintenance, String assignedStoreName)
+	public Drone(String droneID, String weightCapacity, String tripsUntilMaintenance)
 	{
 		this.droneID = droneID;
 		this.weightCapacity = Integer.parseInt(weightCapacity);
 		this.tripsUntilMaintenance = Integer.parseInt(tripsUntilMaintenance);
-		this.assignedStoreName = assignedStoreName;
 		
 		currentPilotAccountID = "";
 	}

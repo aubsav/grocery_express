@@ -1,3 +1,15 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Project: grocery_express
+//
+// Author: Aubrey Savage
+//
+// Class: DeliveryService
+// 
+// Notes: Used the base code provided on Git Hub
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+
 package edu.gatech.cs6310;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -119,7 +131,7 @@ public class DeliveryService {
                 } 
                 else if (tokens[0].equals("display_pilots")) 
                 {
-                	sortPilotAccounts();
+                	displayPilotAccounts();
                     System.out.println("OK:display_completed");
                 } 
                 else if (tokens[0].equals("make_drone")) 
@@ -173,7 +185,7 @@ public class DeliveryService {
                 		{
                 			if(dronePilots.containsKey(tokens[3]))
                 			{
-                    			if(stores.get(storeName).droneIsFlying(droneID))
+                    			if(stores.get(storeName).drones.get(droneID).currentlyFlying)
                     			{
                     				dronePilots.get(droneIDCurrentPilot(droneID)).removeDrone();
                     			}
@@ -345,7 +357,7 @@ public class DeliveryService {
                 			{
                 				if(stores.get(storeName).drones.get(currentDroneID).tripsUntilMaintenance > 0)
                 				{
-                					customers.get(currentUserName).purchaseOrder(stores.get(storeName).getTotalPrice(orderID));
+                					customers.get(currentUserName).purchaseOrder(stores.get(storeName).orders.get(orderID).calculateTotalPrice());
                 					stores.get(storeName).orderPurchased(orderID);
                 					dronePilots.get(currentPilot).deliverOrder();
                 					System.out.println("OK:change_completed");
@@ -462,15 +474,9 @@ public class DeliveryService {
         commandLineInput.close();
     }
     
-    public void displayStoreNames()
-    {
-    	for (String i : stores.keySet())
-    	{
-    		System.out.println("name:" + i + ",revenue:" + stores.get(i).revenue);
-    	}
-    }
-    
-    // Returns true if the pilot license ID already exists
+///////////////////////////////////////////////////////////////
+//Purpose: RReturns true if the pilot license ID already exists
+///////////////////////////////////////////////////////////////
     public boolean pilotLicenseExists(String licenseID)
     {
     	boolean result = false;
@@ -484,16 +490,11 @@ public class DeliveryService {
     	return result;
     }
     
-    public void sortPilotAccounts()
-    {
-    	for (String i : dronePilots.keySet())
-    	{
-    		System.out.println("name:" + dronePilots.get(i).firstName + "_" + dronePilots.get(i).lastName + ",phone:" + dronePilots.get(i).phoneNumber + ",taxID:" + dronePilots.get(i).taxID + ",licenseID:" + dronePilots.get(i).licenseID+ ",experience:" + dronePilots.get(i).experience);
-    	}
-    }
     
+/////////////////////////////////////////////////////////////////////////////////
+//Purpose: Returns the account ID of drone pilot assigned to the current drone ID
+/////////////////////////////////////////////////////////////////////////////////
     
-    // Returns the index of drone pilot assigned to the current drone ID
     public String droneIDCurrentPilot(String droneID)
     {
     	String accountID = "";
@@ -505,6 +506,20 @@ public class DeliveryService {
     		}
     	}
     	return accountID;
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+//Display Functions
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+    
+    public void displayStoreNames()
+    {
+    	for (String i : stores.keySet())
+    	{
+    		System.out.println("name:" + i + ",revenue:" + stores.get(i).revenue);
+    	}
     }
     
     public void displayCustomerUserNames()
@@ -522,12 +537,19 @@ public class DeliveryService {
     {
        	for (String i : stores.keySet())
     	{
-    	System.out.println("name:"+stores.get(i).storeName +
+       		System.out.println("name:"+stores.get(i).storeName +
     			",purchases:" + stores.get(i).totalPurchases +
     			",overloads:" + stores.get(i).getTotalOverload() +
     			",transfers:" + stores.get(i).totalTransfers);
     	}
-    	
+    }
+    
+    public void displayPilotAccounts()
+    {
+    	for (String i : dronePilots.keySet())
+    	{
+    		System.out.println("name:" + dronePilots.get(i).firstName + "_" + dronePilots.get(i).lastName + ",phone:" + dronePilots.get(i).phoneNumber + ",taxID:" + dronePilots.get(i).taxID + ",licenseID:" + dronePilots.get(i).licenseID+ ",experience:" + dronePilots.get(i).experience);
+    	}
     }
 
 }

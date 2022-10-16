@@ -1,6 +1,17 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Project: grocery_express
+//
+// Author: Aubrey Savage
+//
+// Class: Order
+// 
+// Notes: 
+//
+//////////////////////////////////////////////////////////////////////////////////////////
+
 package edu.gatech.cs6310;
 
-import java.util.ArrayList;
 import java.util.TreeMap;
 
 public class Order
@@ -9,8 +20,6 @@ public class Order
 	public String orderID;
 	public String assignedDroneID;
 	public String assignedCustomerUserName;
-	
-	public int weight;
 	
 	TreeMap<String,Line> lines = new TreeMap<String,Line>();
 	

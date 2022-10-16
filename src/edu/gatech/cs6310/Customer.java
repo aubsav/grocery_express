@@ -1,18 +1,23 @@
-package edu.gatech.cs6310;
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+// Project: grocery_express
+//
+// Author: Aubrey Savage
+//
+// Class: Customer
+// 
+// Notes: 
+//
+//////////////////////////////////////////////////////////////////////////////////////////
 
-import java.util.ArrayList;
-import java.util.TreeMap;
+package edu.gatech.cs6310;
 
 public class Customer extends User
 {
 	public int credit;
-	private int totalOrderAmount;
-	
 	public String userName;
 	public int customerRating;
 	public int credits;
-	
-	TreeMap<String,Order> orders = new TreeMap<String,Order>();
 	
 	public Customer(String userName, String firstName, String lastName, String phoneNumber, String customerRating, String credits) 
 	{
@@ -22,13 +27,7 @@ public class Customer extends User
 		this.phoneNumber = phoneNumber;
 		this.customerRating = Integer.parseInt(customerRating);
 		this.credits = Integer.parseInt(credits);
-	}
-
-	public void addToOrder(int totalAmount)
-	{
-		credits = credits - totalAmount;
-	}
-	
+	}	
 	
 	public void purchaseOrder(int totalPrice)
 	{
