@@ -1,13 +1,13 @@
 package edu.gatech.cs6310;
 import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.TreeMap;
 
 public class DeliveryService {
 	
-	ArrayList<Store> stores = new ArrayList<Store>();
-	ArrayList<DronePilot> dronePilots = new ArrayList<DronePilot>();
-
+	TreeMap<String,Store> stores = new TreeMap<String,Store>();
+	TreeMap<String,DronePilot> dronePilots = new TreeMap<String,DronePilot>();
+	TreeMap<String,Customer> customers = new TreeMap<String,Customer>();
+	
     public void commandLoop() {
         Scanner commandLineInput = new Scanner(System.in);
         String wholeInputLine;
@@ -24,9 +24,12 @@ public class DeliveryService {
 
                 if (tokens[0].equals("make_store")) 
                 {
-                	if(!storeNameExists(tokens[1]))
+                	String storeName = tokens[1];
+                	String revenue = tokens[2];
+                	
+                	if(!stores.containsKey(storeName))
                 	{
-                		stores.add(new Store(tokens[1], tokens[2]));
+                		stores.put(storeName,new Store(storeName, revenue));
                         System.out.println("OK:change_completed");
                 	}
                 	else
@@ -37,18 +40,22 @@ public class DeliveryService {
                 
                 else if (tokens[0].equals("display_stores")) 
                 {
-                	sortStoreNames();
+                	//System.out.println()
                     System.out.println("OK:display_completed");
 
                 } 
                 
                 else if (tokens[0].equals("sell_item")) 
                 {
-                	if(storeNameExists(tokens[1]))
+                	String storeName = tokens[1];
+                	String itemName = tokens[2];
+                	String itemWeight = tokens[3];
+                	
+                	if(stores.containsKey(storeName))
                 	{
-                		if(!stores.get(indexOfStoreName(tokens[1])).itemNameExists(tokens[2]))
+                		if(!stores.get(storeName).items.containsKey(itemName))
                 		{
-                			stores.get(indexOfStoreName(tokens[1])).addItem(tokens[2],tokens[3]);
+                			stores.get(storeName).addItem(itemName,itemWeight);
                 			System.out.println("OK:change_completed");
                 		}
                 		else
@@ -64,19 +71,29 @@ public class DeliveryService {
                 } 
                 else if (tokens[0].equals("display_items")) 
                 {
-                	if(storeNameExists(tokens[1]))
+                	String storeName = tokens[1];
+                	
+                	if(stores.containsKey(storeName))
                 	{
-                		stores.get(indexOfStoreName(tokens[1])).displayItems();
+                		stores.get(storeName).displayItems();
                 	}
 
                 } 
                 else if (tokens[0].equals("make_pilot")) 
                 {
-                    if(!pilotAccountExists(tokens[1]))
+                	String accountID = tokens[1];
+                	String firstName = tokens[2];
+                	String lastName = tokens[3];
+                	String phoneNumber = tokens[4];
+                	String taxID = tokens[5];
+                	String licenseID = tokens[6];
+                	String experience = tokens[7];
+                	
+                    if(!dronePilots.containsKey(accountID))
                 	{
-                    	if(!pilotLicenseExists(tokens[6]))
+                    	if(!pilotLicenseExists(licenseID))
                     	{
-                    		dronePilots.add(new DronePilot(tokens[1], tokens[2], tokens[3], tokens[4], tokens[5], tokens[6], tokens[7]));
+                    		dronePilots.put(accountID,new DronePilot(accountID,firstName,lastName,phoneNumber,taxID,licenseID,experience));
                     		System.out.println("OK:change_completed");
                     	}
                     	else
@@ -97,12 +114,16 @@ public class DeliveryService {
                 } 
                 else if (tokens[0].equals("make_drone")) 
                 {
-                    //System.out.println("store: " + tokens[1] + ", drone: " + tokens[2] + ", capacity: " + tokens[3] + ", fuel: " + tokens[4]);
-                	if(storeNameExists(tokens[1]))
+                	String storeName = tokens[1];
+                	String droneID = tokens[2];
+                	String capacity = tokens[3];
+                	String fuel = tokens[4];
+                	
+                	if(stores.containsKey(storeName))
                 	{
-                		if(!stores.get(indexOfStoreName(tokens[1])).droneIDExists(tokens[2]))
+                		if(!stores.get(storeName).drones.containsKey(droneID))
                 		{
-                			stores.get(indexOfStoreName(tokens[1])).addDrone(tokens[2],tokens[3],tokens[4]);
+                			stores.get(storeName).addDrone(droneID,capacity,fuel);
                 			System.out.println("OK:change_completed");
                 		}
                 		else
@@ -118,25 +139,30 @@ public class DeliveryService {
                
                 else if (tokens[0].equals("display_drones")) 
                 {
-                	if(storeNameExists(tokens[1]))
+                	String storeName = tokens[1];
+                	if(stores.containsKey(storeName))
                 	{
-                		stores.get(indexOfStoreName(tokens[1])).displayDrones();
+                		stores.get(storeName).displayDrones();
                 	}
                 	
                 } 
                 else if (tokens[0].equals("fly_drone")) 
                 {
-                	if(storeNameExists(tokens[1]))
+                	String storeName = tokens[1];
+                	String droneID = tokens[2];
+                	String accountID = tokens[3];
+                	
+                	if(stores.containsKey(storeName))
                 	{
-                		if(stores.get(indexOfStoreName(tokens[1])).droneIDExists(tokens[2]))
+                		if(stores.get(storeName).drones.containsKey(droneID))
                 		{
-                    		if(pilotAccountExists(tokens[3]))
-                    		{
-                    			if(stores.get(indexOfStoreName(tokens[1])).droneIsFlying(tokens[2]))
+                			if(dronePilots.containsKey(tokens[3]))
+                			{
+                    			if(stores.get(storeName).droneIsFlying(droneID))
                     			{
-                    				dronePilots.get(indexOfDroneIDCurrentPilot(tokens[2])).removeDrone();
+                    				dronePilots.get(droneIDCurrentPilot(droneID)).removeDrone();
                     			}
-                    			stores.get(indexOfStoreName(tokens[1])).assignDroneToPilot(tokens[2],dronePilots.get(indexOfDronePilotAccountID(tokens[3])));
+                    			stores.get(storeName).assignDroneToPilot(droneID,dronePilots.get(accountID));
                     			System.out.println("OK:change_completed");
                     		}
                     		else
@@ -156,31 +182,218 @@ public class DeliveryService {
                 } 
                 else if (tokens[0].equals("make_customer")) 
                 {
-                    System.out.print("account: " + tokens[1] + ", first_name: " + tokens[2] + ", last_name: " + tokens[3]);
-                    System.out.println(", phone: " + tokens[4] + ", rating: " + tokens[5] + ", credit: " + tokens[6]);
+                	String userName = tokens[1];
+                	String firstName = tokens[2];
+                	String lastName = tokens[3];
+                	String phoneNumber = tokens[4];
+                	String rating = tokens[5];
+                	String credit = tokens[6];
+                	
+                	if(!customers.containsKey(userName))
+                	{
+                		customers.put(userName,new Customer(userName,firstName,lastName,phoneNumber,rating,credit));
+                	}
+                	else
+                	{
+                		System.out.println("ERROR:customer_identifier_already_exists");
+                	}
+                } 
+                else if (tokens[0].equals("display_customers")) 
+                {
+                	sortCustomerUserNames();
 
-                } else if (tokens[0].equals("display_customers")) {
-                    System.out.println("no parameters needed");
+                } 
+                else if (tokens[0].equals("start_order")) 
+                {
+                    String storeName = tokens[1];
+                	String orderID = tokens[2];
+                	String droneID = tokens[3];
+                	String userName = tokens[4];
+                	
+                	if(customers.containsKey(userName))
+                	{
+                    	if(stores.containsKey(storeName))
+                    	{
+                    		if(!stores.get(storeName).orders.containsKey(orderID))
+                    		{
+                    			if(stores.get(storeName).drones.containsKey(droneID))
+                        		{
+                        			//orders.put(orderID,new Order(storeName,orderID,droneID,userName));
+                        			stores.get(storeName).assignOrderToDrone(orderID,droneID,userName);
+                        			System.out.println("OK:change_completed");
+                        		}
+                    			else
+                    			{
+                    				System.out.println("ERROR:drone_identifier_does_not_exist ");
+                    			}
+                    		}
+                    		else
+                    		{
+                    			System.out.println("ERROR:order_identifier_already_exists");
+                    		}
+                    	}
+                    	else
+                    	{
+                    		System.out.println("ERROR:store_identifier_does_not_exist ");
+                    	}
+                	}
+                	else
+                	{
+                		System.out.println("ERROR:customer_identifier_does_not_exist");
+                	}
+                	
+                }
+                else if (tokens[0].equals("display_orders")) 
+                {
+                	String storeName = tokens[1];
+                	if(stores.containsKey(storeName))
+                	{
+                		stores.get(storeName).displayOrders();
+                	}
+                	else
+                	{
+                		System.out.println("ERROR:store_identifier_does_not_exist ");
+                	}
+                } 
+                else if (tokens[0].equals("request_item")) 
+                {
+                    String storeName = tokens[1];
+                	String orderID = tokens[2];
+                	String itemName = tokens[3];
+                	int quantity = Integer.parseInt(tokens[4]);
+                	int unitPrice = Integer.parseInt(tokens[5]);
+                	
+                	if(stores.containsKey(storeName))
+                	{
+                		if(stores.get(storeName).orders.containsKey(orderID))
+                		{
+                			if(stores.get(storeName).items.containsKey(itemName))
+                    		{
+                				
+                				String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
+                				
+                				if(customers.get(currentUserName).credits > (quantity*unitPrice))
+                				{
+                					
+                					if(stores.get(storeName).availableSpaceOnDrone(orderID,quantity,stores.get(storeName).getItemWeight(itemName)))
+                					{
+                						stores.get(storeName).addItemToOrder(itemName,quantity,unitPrice,orderID);
+                						System.out.println("OK:change_completed");
+                					}
+                					else
+                					{
+                						System.out.println("ERROR:drone_cant_carry_new_item");
+                					}
+                				}
+                				else
+                				{
+                					System.out.println("ERROR:customer_cant_afford_new_item");
+                				}
+                    		}
+                			else
+                			{
+                				System.out.println("ERROR:item_identifier_does_not_exist ");
+                			}
+                		}
+                		else
+                		{
+                			System.out.println("ERROR:order_identifier_does_not_exist");
+                		}
+                	}
+                	else
+                	{
+                		System.out.println("ERROR:store_identifier_does_not_exist");
+                	}
+                } 
+                else if (tokens[0].equals("purchase_order")) 
+                {
+                	String storeName = tokens[1];
+                	String orderID = tokens[2];
+                	
+                	if(stores.containsKey(storeName))
+                	{
+                		if(stores.get(storeName).orders.containsKey(orderID))
+                		{
+                			String currentUserName = stores.get(storeName).orders.get(orderID).assignedCustomerUserName;
+                			customers.get(currentUserName).purchaseOrder(stores.get(storeName).getTotalPrice(orderID));
+                			String currentDroneID = stores.get(storeName).orderIDCurrentDrone(orderID);
+                			stores.get(storeName).orderPurchased(orderID);
+                	    	String currentPilot = stores.get(storeName).drones.get(currentDroneID).currentPilotAccountID;
+                			dronePilots.get(currentPilot).deliverOrder(); 
+                			System.out.println("OK:change_completed");
+                		}
+                		else
+                		{
+                			System.out.println("ERROR:order_identifier_does_not_exist");
+                		}
+                	}
+                	else
+                	{
+                		System.out.println("ERROR:store_identifier_does_not_exist");
+                	}
+                } 
+                else if (tokens[0].equals("cancel_order")) 
+                {
+                	String storeName = tokens[1];
+                	String orderID = tokens[2];
+                	
+                	if(stores.containsKey(storeName))
+                	{
+                		if(stores.get(storeName).orders.containsKey(orderID))
+                		{
+                			stores.get(storeName).orderCancelled(orderID);
+                			System.out.println("OK:change_completed");
+                		}
+                		else
+                		{
+                			System.out.println("ERROR:order_identifier_does_not_exist");
+                		}
+                	}
+                	else
+                	{
+                		System.out.println("ERROR:store_identifier_does_not_exist");
+                	}
 
-                } else if (tokens[0].equals("start_order")) {
-                    System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", drone: " + tokens[3] + ", customer: " + tokens[4]);
+                } 
+                else if (tokens[0].equals("transfer_order")) 
+                {
+                    String storeName = tokens[1];
+                    String orderID = tokens[2];
+                    String newDroneID = tokens[3];
+                    
+                	if(stores.containsKey(storeName))
+                	{
+                		if(stores.get(storeName).orders.containsKey(orderID))
+                		{
+                			if(stores.get(storeName).drones.containsKey(newDroneID))
+                			{
+                				if(stores.get(storeName).transferOrder(orderID,newDroneID))
+                				{
+                					System.out.println("OK:change_completed");
+                				}
+                				else
+                				{
+                					System.out.println("Error:new_drone_does_not_have_enough_capacity");
+                					System.out.println("OK:new_drone_is_current_drone_no_change");
+                				}
+                			}
+                			else
+                			{
+                				System.out.println("drone_identifier_does_not_exist");
+                			}
+                		}
+                		else
+                		{
+                			System.out.println("ERROR:order_identifier_does_not_exist");
+                		}
+                	}
+                	else
+                	{
+                		System.out.println("ERROR:store_identifier_does_not_exist");
+                	}
 
-                } else if (tokens[0].equals("display_orders")) {
-                    System.out.println("store: " + tokens[1]);
-
-                } else if (tokens[0].equals("request_item")) {
-                    System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", item: " + tokens[3] + ", quantity: " + tokens[4] + ", unit_price: " + tokens[5]);
-
-                } else if (tokens[0].equals("purchase_order")) {
-                    System.out.println("store: " + tokens[1] + ", order: " + tokens[2]);
-
-                } else if (tokens[0].equals("cancel_order")) {
-                    System.out.println("store: " + tokens[1] + ", order: " + tokens[2]);
-
-                } else if (tokens[0].equals("transfer_order")) {
-                    System.out.println("store: " + tokens[1] + ", order: " + tokens[2] + ", new_drone: " + tokens[3]);
-
-                } else if (tokens[0].equals("display_efficiency")) {
+                } 
+                else if (tokens[0].equals("display_efficiency")) {
                     System.out.println("no parameters needed");
 
                 } else if (tokens[0].equals("stop")) {
@@ -200,62 +413,21 @@ public class DeliveryService {
         commandLineInput.close();
     }
     
-    // Returns true if the store name already exists
-    public boolean storeNameExists(String storeName)
-    {
-    	boolean result = false;
-    	for(int i = 0; i < stores.size(); i++)
-    	{
-    		if(stores.get(i).storeName.equals(storeName))
-    		{
-    			result = true;
-    		}
-    	}
-    	return result;
-    }
-    
     public void sortStoreNames()
     {
-    	ArrayList<String> storeNames = new ArrayList<>();
-    	ArrayList<String> index = new ArrayList<>();
-    	for(int i = 0; i < stores.size(); i++)
+    	//TreeMap<String,String> storeNames = new TreeMap<String,>();
+    	//TreeMap<String,String> index = new TreeMap<String,>();
+    	for (String i : stores.keySet())
     	{
-    		System.out.println("name:" + stores.get(i).storeName + ",revenue:" + stores.get(i).revenue);
+    		System.out.println("name:" + i + ",revenue:" + stores.get(i).revenue);
     	}
-    }
-    
-    public int indexOfStoreName(String storeName)
-    {
-    	int index = 0;
-    	for(int i = 0; i < stores.size(); i++)
-    	{
-    		if(stores.get(i).storeName.equals(storeName))
-    		{
-    			index = i;
-    		}
-    	}
-    	return index;
-    }
-    
-    // Returns true if the pilot account ID already exists
-    public boolean pilotAccountExists(String accountID)
-    {
-    	boolean result = false;
-    	for(int i = 0; i < dronePilots.size(); i++)
-    	{
-    		if(dronePilots.get(i).accountID.equals(accountID))
-    		{
-    			result = true;
-    		}
-    	}
-    	return result;
     }
     
     // Returns true if the pilot license ID already exists
     public boolean pilotLicenseExists(String licenseID)
     {
     	boolean result = false;
-    	for(int i = 0; i < dronePilots.size(); i++)
+    	for (String i : dronePilots.keySet())
     	{
     		if(dronePilots.get(i).licenseID.equals(licenseID))
     		{
@@ -267,38 +439,36 @@ public class DeliveryService {
     
     public void sortPilotAccounts()
     {
-    	for(int i = 0; i < dronePilots.size(); i++)
+    	for (String i : dronePilots.keySet())
     	{
     		System.out.println("name:" + dronePilots.get(i).firstName + "_" + dronePilots.get(i).lastName + ",phone:" + dronePilots.get(i).phoneNumber + ",taxID:" + dronePilots.get(i).taxID + ",licenseID:" + dronePilots.get(i).licenseID+ ",experience:" + dronePilots.get(i).experience);
     	}
     }
     
-    // Returns the index of drone pilot with the current pilot account ID
-    public int indexOfDronePilotAccountID(String accountID)
-    {
-    	int index = 0;
-    	for(int i = 0; i < dronePilots.size(); i++)
-    	{
-    		if(dronePilots.get(i).accountID.equals(accountID))
-    		{
-    			index = i;
-    		}
-    	}
-    	return index;
-    }
-    
     
     // Returns the index of drone pilot assigned to the current drone ID
-    public int indexOfDroneIDCurrentPilot(String droneID)
+    public String droneIDCurrentPilot(String droneID)
     {
-    	int index = 0;
-    	for(int i = 0; i < dronePilots.size()-1; i++)
+    	String accountID = "";
+    	for (String i : dronePilots.keySet())
     	{
     		if(dronePilots.get(i).droneID.equals(droneID))
     		{
-    			index = i;
+    			accountID = i;
     		}
     	}
-    	return index;
+    	return accountID;
     }
+    
+    public void sortCustomerUserNames()
+    {
+    	for (String i : customers.keySet())
+    	{
+    		System.out.println("name:" + customers.get(i).firstName + "_" + customers.get(i).lastName + 
+    				",phone:" + customers.get(i).phoneNumber + 
+    				",rating:" + customers.get(i).customerRating + 
+    				",credit:" + customers.get(i).credits);
+    	}
+    }
+
 }

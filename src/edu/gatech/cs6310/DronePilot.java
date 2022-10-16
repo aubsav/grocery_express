@@ -9,8 +9,6 @@
 //////////////////////////////////////////////////////
 package edu.gatech.cs6310;
 
-import java.util.ArrayList;
-
 public class DronePilot extends User
 {
 	public String accountID;
@@ -44,6 +42,11 @@ public class DronePilot extends User
 	{
 		currentlyFlyingDrone = false;
 		//droneID = "";
+	}
+	
+	public void deliverOrder()
+	{
+		experience += 1;
 	}
 
 }
