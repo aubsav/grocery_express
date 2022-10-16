@@ -16,9 +16,9 @@ import java.util.TreeMap;
 
 public class DeliveryService {
 	
-	TreeMap<String,Store> stores = new TreeMap<String,Store>();
-	TreeMap<String,DronePilot> dronePilots = new TreeMap<String,DronePilot>();
-	TreeMap<String,Customer> customers = new TreeMap<String,Customer>();
+	public TreeMap<String,Store> stores = new TreeMap<String,Store>();
+	public TreeMap<String,DronePilot> dronePilots = new TreeMap<String,DronePilot>();
+	public TreeMap<String,Customer> customers = new TreeMap<String,Customer>();
 	
     public void commandLoop() {
         Scanner commandLineInput = new Scanner(System.in);
@@ -478,7 +478,7 @@ public class DeliveryService {
     }
     
 ///////////////////////////////////////////////////////////////
-//Purpose: RReturns true if the pilot license ID already exists
+// Purpose: Returns true if the pilot license ID already exists
 ///////////////////////////////////////////////////////////////
     public boolean pilotLicenseExists(String licenseID)
     {
@@ -495,7 +495,7 @@ public class DeliveryService {
     
     
 /////////////////////////////////////////////////////////////////////////////////
-//Purpose: Returns the account ID of drone pilot assigned to the current drone ID
+// Purpose: Returns the account ID of drone pilot assigned to the current drone ID
 /////////////////////////////////////////////////////////////////////////////////
     
     public String droneIDCurrentPilot(String droneID)
@@ -513,7 +513,7 @@ public class DeliveryService {
     
 //////////////////////////////////////////////////////////////////////////////////////////
 //
-//Display Functions
+// Display Functions
 //
 //////////////////////////////////////////////////////////////////////////////////////////
     
