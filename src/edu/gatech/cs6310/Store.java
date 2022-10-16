@@ -22,9 +22,9 @@ public class Store
 	private int totalPurchases;
 	private int totalTransfers;
 	
-	TreeMap<String,Item> items = new TreeMap<String,Item>();
-	TreeMap<String,Drone> drones = new TreeMap<String,Drone>();
-	TreeMap<String,Order> orders = new TreeMap<String,Order>();
+	public TreeMap<String,Item> items = new TreeMap<String,Item>();
+	public TreeMap<String,Drone> drones = new TreeMap<String,Drone>();
+	public TreeMap<String,Order> orders = new TreeMap<String,Order>();
 	
 	public Store(String storeName, String revenue) 
 	{
@@ -34,30 +34,6 @@ public class Store
 		totalPurchases = 0;
 		totalTransfers = 0;
 	}
-	
-
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-// Name: itemNameExists(String itemName)
-//
-// Returns: boolean
-//
-// Purpose: Returns true if the item name already exists
-//
-//////////////////////////////////////////////////////////////////////////////////////////
-	
-    public boolean itemNameExists(String itemName)
-    {
-    	boolean result = false;
-    	for (String i : items.keySet())
-    	{
-    		if(items.get(i).getItemName().equals(itemName))
-    		{
-    			result = true;
-    		}
-    	}
-    	return result;
-    }
 	
 //////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -153,30 +129,7 @@ public class Store
 // 
 //////////////////////////////////////////////////////////////////////////////////////////
 	
-    public boolean availableSpaceOnDrone(String orderID, int quantity, int weight)
-    {
-    	
-    	boolean result = false;
-    	String droneID = orderIDCurrentDrone(orderID);
-    	if((drones.get(droneID).getAvailableWeight()) > (quantity*weight))
-    	{
-    			result = true;
-    	}
-    	return result;
-    }
-    
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-//Name: availableSpaceOnNewDrone(String orderID, int totalWeight, String droneID)
-//
-//Returns: boolean
-//
-//Purpose: given a droneID
-//         returns true if the drone has enough space for the given weight
-//
-//////////////////////////////////////////////////////////////////////////////////////////
-    
-    public boolean availableSpaceOnNewDrone(int totalWeight, String droneID)
+    public boolean availableSpaceOnDrone(String droneID,int totalWeight)
     {
     	boolean result = false;
     	if(drones.get(droneID).getAvailableWeight() > (totalWeight))
@@ -184,26 +137,6 @@ public class Store
     			result = true;
     	}
     	return result;
-    }
-    
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-//Name: getTotalOverload()
-//
-//Returns: int
-//
-//Purpose: add all overloads for all drones
-//
-//////////////////////////////////////////////////////////////////////////////////////////
-    
-    public int getTotalOverload()
-    {
-    	int total = 0;
-    	for (String i : drones.keySet())
-    	{
-    		total += drones.get(i).getOverload();
-    	}
-    	return total;
     }
     
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -233,7 +166,7 @@ public class Store
 //Purpose: Returns the drone ID that matches the pilot's drone ID 
 /////////////////////////////////////////////////////////////////
     
-    public String pilotCurrentDroneID(DronePilot pilot)
+    private String pilotCurrentDroneID(DronePilot pilot)
     {
     	String droneID = "";
     	for (String i : drones.keySet())
@@ -288,7 +221,7 @@ public class Store
     public boolean transferOrder(String orderID, String droneID)
     {
     	boolean result = false;
-    	if(availableSpaceOnNewDrone(orders.get(orderID).calculateTotalWeight(),droneID))
+    	if(availableSpaceOnDrone(droneID,orders.get(orderID).calculateTotalWeight()))
     	{
     		totalTransfers += 1;
     		drones.get(orderIDCurrentDrone(orderID)).cancelOrder(orderID);
@@ -387,5 +320,14 @@ public class Store
 		return totalTransfers;
 	}
 	
+    public int getTotalOverload()
+    {
+    	int total = 0;
+    	for (String i : drones.keySet())
+    	{
+    		total += drones.get(i).getOverload();
+    	}
+    	return total;
+    }
 	
 }

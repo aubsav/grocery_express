@@ -20,7 +20,7 @@ public class Order
 	private String assignedDroneID;
 	private String assignedCustomerUserName;
 	
-	TreeMap<String,Line> lines = new TreeMap<String,Line>();
+	public TreeMap<String,Line> lines = new TreeMap<String,Line>();
 	
 	public Order(String orderID, String assignedDroneID, String assignedCustomerUserName) 
 	{

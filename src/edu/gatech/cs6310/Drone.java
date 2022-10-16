@@ -29,7 +29,7 @@ public class Drone
 	private String currentPilotLastName;
 	private String currentPilotAccountID;
 	
-	TreeMap<String,Order> orders = new TreeMap<String,Order>();
+	public TreeMap<String,Order> orders = new TreeMap<String,Order>();
   
 	public Drone(String droneID, String weightCapacity, String tripsUntilMaintenance)
 	{

@@ -304,7 +304,10 @@ public class DeliveryService {
                 					if(customers.get(currentUserName).getCredits() > (quantity*unitPrice))
                 					{
                 					
-                						if(stores.get(storeName).availableSpaceOnDrone(orderID,quantity,stores.get(storeName).items.get(itemName).getItemWeight()))
+                						String droneID = stores.get(storeName).orderIDCurrentDrone(orderID);
+                						int totalWeight = (quantity * stores.get(storeName).items.get(itemName).getItemWeight());
+                						
+                						if(stores.get(storeName).availableSpaceOnDrone(droneID,totalWeight))
                 						{
                 							stores.get(storeName).addItemToOrder(itemName,quantity,unitPrice,orderID);
                 							System.out.println("OK:change_completed");
