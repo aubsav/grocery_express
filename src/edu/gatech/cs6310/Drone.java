@@ -86,6 +86,11 @@ public class Drone
 		totalOrders = orders.size();
 	}
 	
+	public void setTotalOrderWeight(int additionalWeight)
+	{
+		totalOrderWeight += additionalWeight;
+	}
+	
 	public String getDroneID()
 	{
 		return droneID;
@@ -134,10 +139,5 @@ public class Drone
 	public int getAvailableWeight()
 	{
 		return (weightCapacity - totalOrderWeight);
-	}
-	
-	public void setTotalOrderWeight(int additionalWeight)
-	{
-		totalOrderWeight += additionalWeight;
 	}
 }

@@ -297,14 +297,14 @@ public class DeliveryService {
                 		{
                 			if(stores.get(storeName).items.containsKey(itemName))
                     		{
-                				if(!stores.get(storeName).orders.get(orderID).itemAlreadyExists(itemName))
+                				if(!stores.get(storeName).orders.get(orderID).lines.containsKey(itemName))
                 				{
                 					String currentUserName = stores.get(storeName).orders.get(orderID).getAssignedCustomerUserName();
                 				
                 					if(customers.get(currentUserName).getCredits() > (quantity*unitPrice))
                 					{
                 					
-                						String droneID = stores.get(storeName).orderIDCurrentDrone(orderID);
+                						String droneID = stores.get(storeName).findDroneIDOfCurrentOrder(orderID);
                 						int totalWeight = (quantity * stores.get(storeName).items.get(itemName).getItemWeight());
                 						
                 						if(stores.get(storeName).availableSpaceOnDrone(droneID,totalWeight))
@@ -352,7 +352,7 @@ public class DeliveryService {
                 	{
                 		if(stores.get(storeName).orders.containsKey(orderID))
                 		{
-                			String currentDroneID = stores.get(storeName).orderIDCurrentDrone(orderID);
+                			String currentDroneID = stores.get(storeName).findDroneIDOfCurrentOrder(orderID);
                 			String currentPilot = stores.get(storeName).drones.get(currentDroneID).getCurrentPilotAccountID();
                 			String currentUserName = stores.get(storeName).orders.get(orderID).getAssignedCustomerUserName();
                 			

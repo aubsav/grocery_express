@@ -50,7 +50,7 @@ public class Store
     public void assignDroneToPilot(String droneID, DronePilot pilot)
     {
     	Drone drone = drones.get(droneID);
-    	Drone previousDrone = drones.get(pilotCurrentDroneID(pilot));
+    	Drone previousDrone = drones.get(findDroneIDOfCurrentPilot(pilot));
     	
     	boolean pilotAlreadyFlyingDrone = pilot.getCurrentlyFlyingDrone();
     	boolean droneAlreadyFlying = drone.getCurrentlyFlying();
@@ -114,7 +114,7 @@ public class Store
 	public void addItemToOrder(String itemName, int quantity, int unitPrice, String orderID)
 	{
 		orders.get(orderID).addLine(itemName,quantity,unitPrice,items.get(itemName).getItemWeight());			
-		String currentDroneID = orderIDCurrentDrone(orderID);
+		String currentDroneID = findDroneIDOfCurrentOrder(orderID);
 		drones.get(currentDroneID).setTotalOrderWeight(items.get(itemName).getItemWeight()*quantity);
 	}
    
@@ -166,7 +166,7 @@ public class Store
 //Purpose: Returns the drone ID that matches the pilot's drone ID 
 /////////////////////////////////////////////////////////////////
     
-    private String pilotCurrentDroneID(DronePilot pilot)
+    private String findDroneIDOfCurrentPilot(DronePilot pilot)
     {
     	String droneID = "";
     	for (String i : drones.keySet())
@@ -183,7 +183,7 @@ public class Store
 //Purpose: Returns the drone ID that matches the order ID 
 //////////////////////////////////////////////////////////
     
-    public String orderIDCurrentDrone(String orderID)
+    public String findDroneIDOfCurrentOrder(String orderID)
     {
     	String droneID = "";
     	for (String i : drones.keySet())
@@ -208,13 +208,13 @@ public class Store
     {
     	totalPurchases += 1;
     	addToRevenue(orderID);
-    	drones.get(orderIDCurrentDrone(orderID)).deliverOrder(orderID);
+    	drones.get(findDroneIDOfCurrentOrder(orderID)).deliverOrder(orderID);
     	orders.remove(orderID);
     }
     
     public void orderCancelled(String orderID)
     {
-    	drones.get(orderIDCurrentDrone(orderID)).cancelOrder(orderID);
+    	drones.get(findDroneIDOfCurrentOrder(orderID)).cancelOrder(orderID);
     	orders.remove(orderID);
     }
     
@@ -224,7 +224,7 @@ public class Store
     	if(availableSpaceOnDrone(droneID,orders.get(orderID).calculateTotalWeight()))
     	{
     		totalTransfers += 1;
-    		drones.get(orderIDCurrentDrone(orderID)).cancelOrder(orderID);
+    		drones.get(findDroneIDOfCurrentOrder(orderID)).cancelOrder(orderID);
     		drones.get(droneID).addOrder(orderID,orders.get(orderID));
     		result = true;
     	}

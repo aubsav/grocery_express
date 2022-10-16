@@ -33,19 +33,6 @@ public class Order
 	{
 		lines.put(itemName,new Line(itemName,quantity,unitPrice,weight));
 	}
-
-	public boolean itemAlreadyExists(String itemName)
-    {
-    	boolean result = false;
-    	for (String i : lines.keySet())
-    	{
-    		if(lines.get(i).getItemName().equals(itemName))
-    		{
-    			result = true;
-    		}
-    	}
-    	return result;
-    }
 	
 	public int calculateTotalPrice()
     {
