@@ -301,7 +301,7 @@ public class DeliveryService {
                 				{
                 					String currentUserName = stores.get(storeName).orders.get(orderID).getAssignedCustomerUserName();
                 				
-                					if(customers.get(currentUserName).getCredits() > (quantity*unitPrice))
+                					if(customers.get(currentUserName).getCredits() >= (quantity*unitPrice))
                 					{
                 					
                 						String droneID = stores.get(storeName).findDroneIDOfCurrentOrder(orderID);
@@ -360,7 +360,8 @@ public class DeliveryService {
                 			{
                 				if(stores.get(storeName).drones.get(currentDroneID).getTripsUntilMaintenance() > 0)
                 				{
-                					customers.get(currentUserName).purchaseOrder(stores.get(storeName).orders.get(orderID).calculateTotalPrice());
+                					int totalPrice = stores.get(storeName).orders.get(orderID).calculateTotalPrice();
+                					customers.get(currentUserName).purchaseOrder(totalPrice);
                 					stores.get(storeName).orderPurchased(orderID);
                 					dronePilots.get(currentPilot).deliverOrder();
                 					System.out.println("OK:change_completed");
@@ -420,7 +421,8 @@ public class DeliveryService {
                 		{
                 			if(stores.get(storeName).drones.containsKey(newDroneID))
                 			{
-                				if(stores.get(storeName).orders.get(orderID).getAssignedDroneID().equals(newDroneID))
+                				String assignedDroneID = stores.get(storeName).orders.get(orderID).getAssignedDroneID();
+                				if(assignedDroneID.equals(newDroneID))
                 				{
                 					System.out.println("OK:new_drone_is_current_drone_no_change");
                 				}

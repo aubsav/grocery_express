@@ -30,7 +30,7 @@ public class Customer extends User
 	
 	public void purchaseOrder(int totalPrice)
 	{
-		credits = credits - totalPrice;
+		credits -= totalPrice;
 	}
 	
 //////////////////////////////////////////////////////////////////////////////////////////
